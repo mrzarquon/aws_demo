@@ -8,6 +8,8 @@ Splunk Server:
 http://ec2-54-69-81-197.us-west-2.compute.amazonaws.com:8000
 admin/puppetlabs
 
+(if you apply the aws\_hosts.pp these servers will be at awsmaster.puppetlabs.demo and awssplunk.puppetlabs.demo)
+
 EC2 Instances:
 https://console.aws.amazon.com/ec2/v2/home?region=us-west-2#Instances:sort=launchTime;search=barker
 
@@ -28,3 +30,5 @@ In the User Data Script you can see how we are both embedding the instance-id in
 So what do we have?
 
 We can now request a new server from a cloud service, in this case AWS, and we don't have to notify our master or sign a certificate, the signing and classification are happening on demand.
+
+At the end you can show servers that have been deployed, show their uptime, their first run, and how within 3 minutes of uptime (fact submission, etc) they have reports back into the Puppet, configured with mcollective for live management, and splunk collecting their logs."
