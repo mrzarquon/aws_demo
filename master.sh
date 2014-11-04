@@ -128,9 +128,28 @@ function classify_master () {
   done
 }
 
+
+function make_partition {
+  parted -s "$1" unit s mkpart primary "$2" "$3"
+}
+
+function get_partition {
+  echo $(parted /dev/xvda unit s print free | grep 'Free Space' | tail -n 1)
+}
+
+function format_partition {
+  partx -v -a /dev/xvda
+  mkfs.ext4 /dev/xvda2
+  mount /dev/xvda2 /opt
+  echo "/dev/xvda2              /opt                    ext4    defaults        0 2" >> /etc/fstab
+}
+
+
+
 function provision_puppet() {
   if [ -f /etc/redhat-release ]; then
     export breed='redhat'
+    setenforce 0
   elif [ -f /etc/debian_version ]; then
     export breed='debian'
   else
@@ -142,6 +161,10 @@ function provision_puppet() {
   MD="http://169.254.169.254/latest/meta-data/"
   PUBLIC_HOSTNAME=$(curl -fs $MD/public-hostname)
   INTERNAL_HOSTNAME=$(curl -fs $MD/hostname)
+
+
+  make_partition /dev/xvda $(get_partition)
+  format_partition
 
   install_puppetmaster
   download_modules "puppetlabs-ntp,puppetlabs-apache"

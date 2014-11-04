@@ -1,0 +1,4 @@
+<powershell> $webclient = new-object System.Net.WebClient 
+$instanceid = $webclient.DownloadString("http://169.254.169.254/latest/meta-data/instance-id")
+msiexec /qn /i https://s3.amazonaws.com/pe-builds/released/3.3.2/puppet-enterprise-3.3.2.msi PUPPET_MASTER_SERVER=ip-10-0-0-41.us-west-2.compute.internal PUPPET_AGENT_CERTNAME=$instanceid
+</powershell>
